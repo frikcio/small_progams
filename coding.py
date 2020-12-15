@@ -55,4 +55,3 @@ if answer == "uncoding":
 	file.close()
 else:
 	print("Error")
-

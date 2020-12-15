@@ -13,13 +13,14 @@ def blue(text):  # added blue color
     return ("\033[34m{}\033[0m".format(text))
 
 
-def edging(mass, x, y):  # added "empty" around position
-    for hor in range(mass.index(mass[x])-1, mass.index(mass[x])+2):
-        for poss in range(mass[hor].index(mass[hor][y])-1, mass[hor].index(mass[hor][y])+2):
-            print(mass[hor][poss], end="")
+def edging(mass1, mass2, x, y):  # added "empty" around position
+    for x in range(x-1, x+2):
+        for y in range(y-1, y+2):
+            print(mass[x][y], end="")
             print()
-            if mass[hor][poss] == symbol[0]:
-                mass[hor][poss] = symbol[1]
+            if mass1[x][y] == symbol[0] and mass2[x][y] == symbol[0]:
+                mass[x][y] = symbol[1]
+
 
 hor, vert = 0, 0
 symbol = ("|_|", "|O|", "|*|", "|X|")
@@ -98,12 +99,12 @@ for i in range(1, 11):
     m1[0][i] = " " + str(i) + " "
     m1[i][0] = " " + str(i) + " "
     m1[0][0] = "   "
+
 while True:
     if ship_1 == 0 and ship_2 == 0 and ship_3 == 0 and ship_4 == 0:
         print("You did it!!!")
         break
-    for i in m2:
-        print(i)
+
     for j in range(0, len(m1)):
 
         for i in m1[j]:
@@ -124,7 +125,8 @@ while True:
         if m2[hor - 1][vert - 1] == 1:
             m1[hor][vert] = symbol[3]
             ship_1 -= 1
-            edging(m1, hor, vert)
+            edging(m1, m2, hor, vert)
 
         elif m2[hor - 1][vert - 1] >= 2:
             m1[hor][vert] = symbol[2]
+
