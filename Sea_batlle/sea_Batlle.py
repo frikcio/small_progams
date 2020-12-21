@@ -1,5 +1,88 @@
 import random
 
+ship_1 = 0
+ship_2 = 0
+ship_3 = 0
+ship_4 = 0
+symbol = ("|_|", "|O|", "|*|", "|X|")
+
+ship_archive = {
+    1: ship_1,
+    2: ship_2,
+    3: ship_3,
+    4: ship_4
+}
+
+
+def ship_possition(size, mass2, count):
+    while ship_archive[size] != count:
+        orientation = random.randint(0, 1)
+        x, y = random.randint(size - 1, (len(mass2) - size) - 1), random.randint(size - 1, (len(mass2) - size) - 1)
+        if mass2[x][y] == symbol[0]:
+            if mass2[x - 1][y - 1] == symbol[0] and mass2[x][y - 1] == symbol[0] and mass2[x + 1][y - 1] == \
+                    symbol[0] and mass2[x - 1][y] == symbol[0] and mass2[x][y] == symbol[0] and \
+                    mass2[x + 1][y] == symbol[0] and mass2[x - 1][y + 1] == symbol[0] and mass2[x][y + 1] == \
+                    symbol[0] and mass2[x + 1][y + 1] == symbol[0]:
+                mass2[x][y] = size
+                if size == 1:
+                    ship_archive[size] += 1
+                else:
+                    while True:
+                        if orientation == 1:
+                            if mass2[x - 2][y - 1] == symbol[0] and mass2[x - 2][y] == symbol[0] and mass2[x - 2][y + 1] == symbol[0]:
+                                mass2[x - 1][y] = size
+                                if size == 3:
+                                    if mass2[x - 3][y - 1] == symbol[0] and mass2[x - 3][y] == symbol[0] and mass2[x - 3][y + 1] == symbol[0]:
+                                        mass2[x - 2][y] = size
+                                    else:
+                                        mass2[x + 1][y] = size
+                            elif mass2[x + 2][y - 1] == symbol[0] and mass2[x + 2][y] == symbol[0] and mass2[x + 2][
+                                y + 1] == symbol[0]:
+                                mass2[x + 1][y] = size
+                                if size == 3:
+                                    if mass2[x + 3][y - 1] == symbol[0] and mass2[x + 3][y] == symbol[0] and mass2[x + 3][y + 1] == symbol[0]:
+                                        mass2[x + 2][y] = size
+                            if size == 2:
+                                break
+                            if size==3:
+                                break
+                            if size == 4:
+                                mass2[x + 1][y] = size
+                                mass2[x - 2][y] = size
+                                break
+                            else:
+                                continue
+
+                        else:
+                            if mass2[x - 1][y - 2] == symbol[0] and mass2[x][y - 2] == symbol[0] and mass2[x + 1][y - 2] == symbol[0]:
+                                mass2[x][y - 1] = size
+                                if size == 3:
+                                    if mass2[x - 1][y - 3] == symbol[0] and mass2[x][y - 3] == symbol[0] and mass2[x + 1][y - 3] == symbol[0]:
+                                        mass2[x][y - 2] = size
+                                    else:
+                                        mass2[x][y + 1] = size
+                            elif mass2[x - 1][y + 2] == symbol[0] and mass2[x][y + 2] == symbol[0] and mass2[x + 1][y + 2] == symbol[0]:
+                                mass2[x][y + 1] = size
+                                if size == 3:
+                                    if mass2[x - 1][y + 3] == symbol[0] and mass2[x][y + 3] == symbol[0] and mass2[x + 3][y + 3] == symbol[0]:
+                                        mass2[x][y + 2] = size
+                            if size == 2:
+                                break
+
+                            if size == 3:
+                                break
+                            if size == 4:
+                                mass2[x][y + 1] = size
+                                mass2[x][y - 2] = size
+                                break
+                            else:
+                                continue
+                    ship_archive[size] += 1
+            else:
+                continue
+        else:
+            continue
+
 
 def red(text):  # added red color
     return ("\033[31m{}\033[0m".format(text))
@@ -14,94 +97,33 @@ def blue(text):  # added blue color
 
 
 def edging(mass1, mass2, x, y):  # added "empty" around position
-    for x in range(x-1, x+2):
-        for y in range(y-1, y+2):
-            print(mass[x][y], end="")
-            print()
-            if mass1[x][y] == symbol[0] and mass2[x][y] == symbol[0]:
-                mass[x][y] = symbol[1]
+    for horizontal in range(x - 1, x + 2):
+        for vertical in range(y - 1, y + 2):
+            if mass2[horizontal - 1][vertical - 1] == symbol[0] and mass1[horizontal][vertical] == symbol[0]:
+                mass1[horizontal][vertical] = symbol[1]
 
 
-hor, vert = 0, 0
-symbol = ("|_|", "|O|", "|*|", "|X|")
-m1 = [[symbol[0]] * 11 for i in range(11)]  # created area for a game
-m2 = [[symbol[0]] * 10 for i in range(10)]  # created area with ships
-ship_1 = 0
-ship_2 = 0
-ship_3 = 0
-ship_4 = 0
-k = 0
+m1 = [[symbol[0]] * 11 for cell in range(11)]  # created area for a game
+m2 = [[symbol[0]] * 10 for cell2 in range(10)]  # created area with ships
 
-while True:
+roUnd = 0
 
-    if ship_4 <= 1:
-        hor, vert = random.randint(0, 8), random.randint(0, 8)
-        m2[hor][vert] = 4
-        if vert <= 6:
-            m2[hor][vert + 1] = 4
-            m2[hor][vert + 2] = 4
-            m2[hor][vert + 3] = 4
-        elif vert >= 4:
-            m2[hor][vert - 1] = 4
-            m2[hor][vert - 2] = 4
-            m2[hor][vert - 3] = 4
-        ship_4 += 1
+ship_possition(4, m2, 1)
 
-    while ship_3 <= 2:
-        hor, vert = random.randint(0, 6), random.randint(0, 8)
-        if m2[hor][vert] == symbol[0]:
-            if m2[hor - 1][vert - 1] == symbol[0] and m2[hor - 2][vert - 1] == symbol[0] and m2[hor][vert - 1] == symbol[0] and \
-                    m2[hor - 1][vert] == symbol[0] and m2[hor - 2][vert] == symbol[0] and \
-                    m2[hor + 1][
-                        vert - 1] == symbol[0] and m2[hor + 2][vert - 1] == symbol[0] and m2[hor - 1][vert + 1] == symbol[0] and \
-                    m2[hor - 2][vert + 1] == symbol[0] and m2[hor][vert + 1] == symbol[0] and \
-                    m2[hor + 1][
-                        vert] == symbol[0] and m2[hor + 2][vert] == symbol[0] and m2[hor + 1][vert + 1] == symbol[0] and \
-                    m2[hor + 2][vert + 1] == symbol[0]:
-                m2[hor][vert] = 3
-                if hor == 0:
-                    m2[hor + 1][vert] = 3
-                    m2[hor + 2][vert] = 3
-                else:
-                    m2[hor - 1][vert] = 3
-                    m2[hor + 1][vert] = 3
-                ship_3 += 1
+ship_possition(3, m2, 2)
 
-    while ship_2 <= 2:
-        hor, vert = random.randint(0, 8), random.randint(0, 7)
-        if m2[hor][vert] == symbol[0]:
-            for i in range(3):
-                if m2[hor - 1][vert - 1] == symbol[0] and m2[hor][vert - 1] == symbol[0] and m2[hor - 1][vert] == symbol[0] and \
-                        m2[hor + 1][
-                            vert - 1] == symbol[0] and m2[hor - 1][vert + 1] == symbol[0] and m2[hor - 1][vert + 2] == symbol[0] and \
-                        m2[hor][vert + 1] == symbol[0] and m2[hor][vert + 2] == symbol[0] and m2[hor + 1][
-                    vert] == symbol[0] and m2[hor + 1][vert + 1] == symbol[0] and m2[hor + 1][vert + 2] == symbol[0]:
-                    m2[hor][vert] = 2
-                    if vert <= 7:
-                        vert += 1
-                    elif vert >= 2:
-                        vert -= 1
-                    m2[hor][vert] = 2
-                    ship_2 += 1
+ship_possition(2, m2, 3)
 
-    while ship_1 <= 3:
-        hor, vert = random.randint(0, 8), random.randint(0, 8)
-        if m2[hor][vert] == symbol[0]:
-            if m2[hor - 1][vert - 1] == symbol[0] and m2[hor][vert - 1] == symbol[0] and m2[hor - 1][vert] == symbol[0] and \
-                    m2[hor + 1][
-                        vert - 1] == symbol[0] and m2[hor - 1][vert + 1] == symbol[0] and m2[hor][vert + 1] == symbol[0] and \
-                    m2[hor + 1][
-                        vert] == symbol[0] and m2[hor + 1][vert + 1] == symbol[0]:
-                m2[hor][vert] = 1
-                ship_1 += 1
-    break
+ship_possition(1, m2, 4)
+
 for i in range(1, 11):
     m1[0][i] = " " + str(i) + " "
     m1[i][0] = " " + str(i) + " "
     m1[0][0] = "   "
 
 while True:
-    if ship_1 == 0 and ship_2 == 0 and ship_3 == 0 and ship_4 == 0:
+    
+    if ship_archive[1] == 0 and ship_archive[2] == 0 and ship_archive[3] == 0 and ship_archive[4] == 0:
         print("You did it!!!")
         break
 
@@ -117,16 +139,27 @@ while True:
             else:
                 print(i, end="")
         print()
-
-    hor, vert = int(input("horizontal: ")), int(input("vertical: "))
-    if m2[hor - 1][vert - 1] == symbol[0]:
-        m1[hor][vert] = symbol[1]
+    print("ship_4: " + str(ship_archive[4]))
+    print("ship_3: " + str(ship_archive[3]))
+    print("ship_2: " + str(ship_archive[2]))
+    print("ship_1: " + str(ship_archive[1]))
+    horizontal, vertical = int(input("horizontal: ")), int(input("vertical: "))
+    if m2[horizontal - 1][vertical - 1] == symbol[0]:
+        m1[horizontal][vertical] = symbol[1]
     else:
-        if m2[hor - 1][vert - 1] == 1:
-            m1[hor][vert] = symbol[3]
-            ship_1 -= 1
-            edging(m1, m2, hor, vert)
+        if m2[horizontal - 1][vertical - 1] == 1:
+            m2[horizontal - 1][vertical - 1] = symbol[3]
+            m1[horizontal][vertical] = symbol[3]
+            ship_archive[1] -= 1
+            edging(m1, m2, horizontal, vertical)
 
-        elif m2[hor - 1][vert - 1] >= 2:
-            m1[hor][vert] = symbol[2]
+        elif m2[horizontal - 1][vertical - 1] >= 2:
+            m2[horizontal - 1][vertical - 1] = symbol[2]
+            m1[horizontal][vertical] = symbol[2]
+            if m2[horizontal - 1][vertical - 1] == 2:
 
+                edging(m1, m2, horizontal, vertical)
+            elif m2[horizontal - 1][vertical - 1] == 3:
+                pass
+            elif m2[horizontal - 1][vertical - 1] == 4:
+                pass
