@@ -8,12 +8,12 @@ def count_char (text, char):
 			count+=1
 	return count
 
-answer = input("What you want?\n")
+answer = input("What you want?\n 1 - coding \n 2 - uncoding \n")
 
-if answer == "coding":
+if answer == "1":
 	text_o = input("input the text: ")
 
-	for char in "абвгдеёжзийклмнопрстуфхцчшщыьэюя":
+	for char in "abcdefghijklmnopqrstuvwxyz":
 		perc = 100*count_char(text_o, char)/len(text_o)
 		print("{0} - {1}%".format(char, round(perc,2)))
 
@@ -27,18 +27,18 @@ if answer == "coding":
 			text=text.replace(key_l[0+i], code[0+i])
 		print(text)
 		
-		answer1 = input("Do you like this wariant?")
-		if answer1=="yes":
+		answer1 = input("Do you like this wariant? (1 - YES / 2 - NO)")
+		if answer1=="1":
 			file = open("file_coding.txt", "w")
 			file.write(str(text))
 			file.close()
 			break
-		if answer1=="no":
+		if answer1=="2":
 			continue
 		else:
 			print("Error!")
 
-if answer == "uncoding":
+if answer == "2":
 	file = open("file_coding.txt", "r")
 	text=file.read()
 	file.close()
