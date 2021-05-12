@@ -1,113 +1,152 @@
-from colorama import init
-from colorama import Fore
-
-init()
+import os
+import time
 
 
-def my_error():
-    print(Fore.RED + "\nWRONG COMMAND!\n\n")
+def clear(sec):  # update console
+    time.sleep(sec)
+    os.system('clear')
 
 
-def num_error():
-    print(Fore.RED + "\nERROR!\n")
-    print("Please input a number\n\n" + Fore.GREEN)
+COMMAND_WORDS = ["exit", "help"]
 
 
-def check():
+class Message(object):  # color for text messages
+    @staticmethod
+    def red(msg):
+        return f"\033[91m {msg} \033[0m"
+
+    @staticmethod
+    def green(msg):
+        return f"\033[92m {msg} \033[0m"
+
+    @staticmethod
+    def yellow(msg):
+        return f"\033[93m {msg} \033[0m"
+
+    @staticmethod
+    def blue(msg):
+        return f"\033[94m {msg} \033[0m"
+
+
+def check1(number1):  # check first input is number
+    if not number1.isdigit():
+        return float(number1)
+    return int(number1)
+
+
+def check2():  # check second input is number
     while True:
-        number2 = input(Fore.BLUE + "\n2-nd number:  " + Fore.GREEN)
-        if number2.isdigit():
-            return number2
-        else:
-            num_error()
-    
-
-def plus(number1):
-    number2 = check()
-    return float(number1) + float(number2)
-
-
-def minus(number1):
-    number2 = check()
-    return float(number1) - float(number2)
-
-
-def times(number1):
-    number2 = check()
-    return float(number1) * float(number2)
-
-
-def divide(number1):
-    while True:
-        number2 = input(Fore.BLUE + "\n2-nd number:  " + Fore.GREEN)
-        if number2.isdigit():
-            try:
-                results = float(number1) / float(number2)
-                return results
-            except ZeroDivisionError:
-                print(Fore.RED + "\nCANNOT DIVIDED BY 0!!\n")
-                continue
-        else:
-            num_error()
+        number2 = input(Message.blue("2-nd number: "))
+        try:
+            if not number2.isdigit():
+                return float(number2)
+            return int(number2)
+        except ValueError:
+            print(Message.red("Your input is not a correct number!"))
             continue
 
 
-operations_list = {
-    "+": plus,
-    "-": minus,
-    "*": times,
-    "/": divide}
+class Operation(object):
+    @staticmethod
+    def plus(number1):
+        number2 = check2()
+        return number1 + number2
+
+    @staticmethod
+    def minus(number1):
+        number2 = check2()
+        return number1 - number2
+
+    @staticmethod
+    def times(number1):
+        number2 = check2()
+        return number1 * number2
+
+    @staticmethod
+    def divide(number1):
+        while True:
+            number2 = check2()
+            try:
+                results = number1 / number2
+                return results
+            except ZeroDivisionError:
+                print(Message.red("\nCANNOT DIVIDED BY 0!!\n"))
+            continue
 
 
-def run_operation(number1, operations_list, operation):
-    return operations_list[operation](number1)
+OPERATIONS_LIST = {
+    "+": Operation.plus,
+    "-": Operation.minus,
+    "*": Operation.times,
+    "/": Operation.divide,
+}
+
+
+def run_operation(operation_list, operation, number1):
+    return operation_list[operation](number1)
 
 
 # Instruction block BEGIN
 def help_instruction():
-    print(Fore.MAGENTA + '\n\nINSTRUCTION:\n',
-          Fore.YELLOW + 'Input a number and press:\n',
-          Fore.GREEN + ' "+" ' + Fore.YELLOW + ' if you want add numbers;\n',
-          Fore.GREEN + ' "-" ' + Fore.YELLOW + ' if you want subtract numbers;\n',
-          Fore.GREEN + ' "*" ' + Fore.YELLOW + ' if you want multiply numbers;\n',
-          Fore.GREEN + ' "/" ' + Fore.YELLOW + ' if you want divide the numbers;\n',
-          'Enter command ' + Fore.GREEN + ' "help"' + Fore.YELLOW + ', if you want to see Instruction one more time;\n',
-          'And ' + Fore.GREEN + ' "exit"' + Fore.YELLOW + ', if you want to close this program;\n' + Fore.BLUE)
+    print(f'\n{Message.yellow("INSTRUCTION")}:\n',
+          f'Input a number and press:\n',
+          f'"{Message.green("+")}" if you want add numbers;\n',
+          f'"{Message.green("-")}" if you want subtract numbers;\n',
+          f'"{Message.green("*")}" if you want multiply numbers;\n',
+          f'"{Message.green("/")}" if you want divide the numbers;\n',
+          f'Enter command "{Message.yellow("help")}", if you want to see Instruction one more time;\n',
+          f'And "{Message.yellow("exit")}", if you want to close this program;\n')
+
 # Instruction block ENDING
 
 
-help_instruction()  # Calculation module
-while True:
-    print(Fore.BLUE + "\nStart the calculation\n")
-    number1 = input("1-st number:  " + Fore.GREEN)
+def run():
+    clear(0.5)
+    calc_round = 1
+    help_instruction()
+    while True:
+        print(f"\nStart the calculation #{calc_round}\n")
+        number1 = input(Message.blue("1-st number: "))
+        if number1 not in COMMAND_WORDS:
+            # OPERATION module
+            try:
+                number1 = check1(number1)
+            except ValueError:
+                print(Message.red("Your input is not a correct"))
+                continue
 
-    # EXIT module
-    if number1 == "exit":
-        print(Fore.YELLOW + "Are you want to close this program? " + Fore.BLUE + "(1 - YES/2 - NO)" + Fore.GREEN)
-        answer = input(":  ")
-        if answer == "1":
-            print(Fore.YELLOW + "\n\n calculation is over!")
-            break
-        elif answer == "2":
-            continue
+            operation = input(Message.blue("operation: "))
+            if operation in OPERATIONS_LIST:
+                result = run_operation(OPERATIONS_LIST, operation, number1)
+                print(f"\n{Message.blue('Result')}: {Message.green(result)} \n\n")
+                calc_round += 1
+                clear(2)
+            else:
+                print(Message.red("Incorrect operation!"))
+                continue
         else:
-            my_error()
-            continue
+            if number1 == 'exit':
+                # EXIT module
+                print("Are you want to close this program? (1 - YES/2 - NO)")
+                answer = input(":  ")
+                if answer == "1":
+                    print(Message.yellow("Calculation is over!"))
+                    break
+                elif answer == "2":
+                    continue
+                else:
+                    print(Message.red("Incorrect answer!"))
+                    clear(1)
+                    continue
+            elif number1 == "help":
+                help_instruction()
+                continue
+            else:
+                print(Message.yellow("Incorrect Input!"))
 
-    elif number1 == "help":
-        help_instruction()
-        continue
 
-    elif number1.isdigit():
-        # OPERATION module
-        print(Fore.GREEN)
-        operation = input(Fore.BLUE + "operation:  " + Fore.GREEN)
-        if operation in operations_list:
-            result = run_operation(number1, operations_list, operation)
-            print(Fore.BLUE + "\nResult: " + Fore.GREEN + str(result) + "\n\n")
-        else:
-            my_error()
-
-    else:
-        num_error()
-        continue
+if __name__ == "__main__":
+    try:
+        run()
+    except KeyboardInterrupt:
+        pass
