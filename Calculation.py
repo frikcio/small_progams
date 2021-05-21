@@ -90,11 +90,11 @@ def run_operation(operation_list, operation, number1):
 def help_instruction():
     print(f'\n{Message.yellow("INSTRUCTION")}:\n',
           f'Input a number and press:\n',
-          f'"{Message.green("+")}" if you want add numbers;\n',
-          f'"{Message.green("-")}" if you want subtract numbers;\n',
-          f'"{Message.green("*")}" if you want multiply numbers;\n',
-          f'"{Message.green("/")}" if you want divide the numbers;\n',
-          f'Enter command "{Message.yellow("help")}", if you want to see Instruction one more time;\n',
+          f'"{Message.green("+")}" if you want to add numbers;\n',
+          f'"{Message.green("-")}" if you want to subtract numbers;\n',
+          f'"{Message.green("*")}" if you want to multiply numbers;\n',
+          f'"{Message.green("/")}" if you want to divide the numbers;\n',
+          f'Enter the command "{Message.yellow("help")}", if you want to see Instruction one more time;\n',
           f'And "{Message.yellow("exit")}", if you want to close this program;\n')
 
 # Instruction block ENDING
@@ -105,7 +105,7 @@ def run():
     calc_round = 1
     help_instruction()
     while True:
-        print(f"\nStart the calculation #{calc_round}\n")
+        print(f"\nStart calculation #{calc_round}\n")
         number1 = input(Message.blue("1-st number: "))
         if number1 not in COMMAND_WORDS:
             # OPERATION module
