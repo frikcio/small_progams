@@ -4,7 +4,7 @@ import time
 
 def clear(sec):  # update console
     time.sleep(sec)
-    os.system('clear')
+    os.system('clear')  # clear console if os Linux / os.system('cls') if os Windows 
 
 
 COMMAND_WORDS = ["exit", "help"]
@@ -82,12 +82,11 @@ OPERATIONS_LIST = {
 }
 
 
-def run_operation(operation_list, operation, number1):
+def run_operation(operation_list, operation, number1):  
     return operation_list[operation](number1)
 
 
-# Instruction block BEGIN
-def help_instruction():
+def help_instruction():  # Instruction 
     print(f'\n{Message.yellow("INSTRUCTION")}:\n',
           f'Input a number and press:\n',
           f'"{Message.green("+")}" if you want to add numbers;\n',
@@ -96,8 +95,6 @@ def help_instruction():
           f'"{Message.green("/")}" if you want to divide the numbers;\n',
           f'Enter the command "{Message.yellow("help")}", if you want to see Instruction one more time;\n',
           f'And "{Message.yellow("exit")}", if you want to close this program;\n')
-
-# Instruction block ENDING
 
 
 def run():
@@ -108,13 +105,11 @@ def run():
         print(f"\nStart calculation #{calc_round}\n")
         number1 = input(Message.blue("1-st number: "))
         if number1 not in COMMAND_WORDS:
-            # OPERATION module
             try:
                 number1 = check1(number1)
             except ValueError:
                 print(Message.red("Your input is not a correct"))
                 continue
-
             operation = input(Message.blue("operation: "))
             if operation in OPERATIONS_LIST:
                 result = run_operation(OPERATIONS_LIST, operation, number1)
@@ -126,7 +121,6 @@ def run():
                 continue
         else:
             if number1 == 'exit':
-                # EXIT module
                 print("Are you want to close this program? (1 - YES/2 - NO)")
                 answer = input(":  ")
                 if answer == "1":
